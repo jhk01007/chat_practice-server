@@ -31,7 +31,8 @@ public class SecurityConfigs {
                 .httpBasic(AbstractHttpConfigurer::disable) // http basic 비활성화
                 // 특정 url 패턴에 대해서는 Authentication 객체 요구하지 않음(인증처리 제외)
                 .authorizeHttpRequests(a -> a
-                        .requestMatchers("/member/create", "/member/doLogin", "/connect").permitAll()
+                        .requestMatchers("/member/create", "/member/doLogin").permitAll()
+                        .requestMatchers("/connect/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션방식을 사용하지 않음
