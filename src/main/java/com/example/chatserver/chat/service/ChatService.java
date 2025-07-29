@@ -155,4 +155,18 @@ public class ChatService {
                         .build()
                 ).toList();
     }
+
+    // 해당 사용자가 해당 방에 참여자인지 검증
+    public boolean isRoomParticipant(String email, Long roomId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(roomId)
+                .orElseThrow(() -> new EntityNotFoundException("chatromm cannot be found"));
+
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("member cannot be found."));
+
+        List<ChatParticipant> chatParticipants = chatParticipantRepository.findByChatRoom(chatRoom);
+
+        return chatParticipants.stream()
+                .anyMatch(c -> c.getMember().equals(member));
+    }
 }
