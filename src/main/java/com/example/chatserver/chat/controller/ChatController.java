@@ -24,10 +24,17 @@ public class ChatController {
     }
 
     // 그룹채팅목록조회
-    @GetMapping("/room/group/chat")
+    @GetMapping("/room/group/list")
     public ResponseEntity<?> getGroupChatRooms() {
         List<ChatRoomListResDto> chatRooms = chatService.getGroupChatRooms();
 
         return new ResponseEntity<>(chatRooms, HttpStatus.OK);
+    }
+
+    // 그룹 채팅방 참여
+    @PostMapping("/room/group/{roomId}/join")
+    public ResponseEntity<?> joinGroupChatRoom(@PathVariable Long roomId) {
+        chatService.addParticipantToGroupChat(roomId);
+        return ResponseEntity.ok().build();
     }
 }
