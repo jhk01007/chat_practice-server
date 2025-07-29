@@ -169,4 +169,19 @@ public class ChatService {
         return chatParticipants.stream()
                 .anyMatch(c -> c.getMember().equals(member));
     }
+
+    // 특정 룸의 모든 메시지, 특정 사용자에 대해 모두 읽음처리
+    public void messageRead(Long roomId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(roomId)
+                .orElseThrow(() -> new EntityNotFoundException("chatromm cannot be found"));
+
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("member cannot be found."));
+
+        List<ReadStatus> readStatuses = readStatusRepository.findByChatRoomAndMember(chatRoom, member);
+        for (ReadStatus r : readStatuses) {
+            r.updateIsRead(true);
+        }
+    }
 }
